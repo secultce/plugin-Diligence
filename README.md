@@ -14,3 +14,7 @@
 
 ## Regras e validações
 [Documentação](https://docs.google.com/document/d/17k0FKzfvFCc8WIDEtI9U7At46NhK-HkWoe4FAfGafbo/edit?usp=sharing)
+
+## Banco de dados
+![Diligencia drawio](https://github.com/secultce/plugin-Diligence/assets/7341117/5c1fb18a-f0b8-474d-bec9-33264aa26b31)
+
