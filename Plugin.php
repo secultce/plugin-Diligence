@@ -7,8 +7,10 @@ class Plugin extends \MapasCulturais\Plugin {
    function _init () {
     $app = App::i();
    
-    $app->hook('view.render(<<*>>):before', function () use ($app) {
-     
+    $app->hook('template(registration.view.content-diligence):begin', function () use ($app) {
+      $app->view->enqueueStyle('app', 'diligence', 'css/diligence/style.css');
+      
+     $this->part('diligence/tabs-parent');
     });
    }
 
