@@ -16,5 +16,6 @@
 [Documentação](https://docs.google.com/document/d/17k0FKzfvFCc8WIDEtI9U7At46NhK-HkWoe4FAfGafbo/edit?usp=sharing)
 
 ## Banco de dados
-![Diligencia drawio](https://github.com/secultce/plugin-Diligence/assets/7341117/5c1fb18a-f0b8-474d-bec9-33264aa26b31)
+![Diligencia drawio](https://github.com/secultce/plugin-Diligence/assets/7341117/1ca6b6bb-3674-4792-ac67-01a4017fd4e0)
+
 
