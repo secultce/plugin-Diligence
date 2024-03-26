@@ -6,8 +6,8 @@ $app = MapasCulturais\App::i();
 $em = $app->em;
 $conn = $em->getConnection();
 
-return array( 
-    'create table diligence' => function() use ($conn){
+return [
+    'create table diligence' => function(){
         __exec("CREATE SEQUENCE diligence_id_seq INCREMENT BY 1 MINVALUE 1 START 1;");
 
         __exec("CREATE TABLE IF NOT EXISTS diligence (
@@ -17,8 +17,8 @@ return array(
             agent_id VARCHAR(32) NOT NULL,
             create_timestamp timestamp,
             description TEXT,
-            status VARCHAR(50) NOT NULL,
-            situation VARCHAR(50) NOT NULL,
+            status INT NOT NULL,
+            situation INT NULL,
             days integer NULL,
             enable boolean NULL default false,
             PRIMARY KEY(id));");
@@ -35,4 +35,4 @@ return array(
 
         // $conn->executeQuery("UPDATE evaluation_method_configuration SET type = 'documentary' WHERE opportunity_id IN ({$ids})");
     }
-);
+];

@@ -1,10 +1,15 @@
 <?php
-// src/Product.php
 namespace Diligence\Entities;
 
 use Doctrine\ORM\Mapping as ORM;
 use \MapasCulturais\App;
 use DateTime;
+use MapasCulturais\Entity;
+//Para uso do RabbitMQ
+require_once dirname(__DIR__).'/vendor/autoload.php';
+use PhpAmqpLib\Connection\AMQPStreamConnection;
+use PhpAmqpLib\Message\AMQPMessage;
+use PhpAmqpLib\Exchange\AMQPExchangeType;
 
 /**
  * Diligence 
@@ -13,12 +18,20 @@ use DateTime;
  * @ORM\Entity
  * @ORM\entity(repositoryClass="MapasCulturais\Repository")
  */
+
 class Diligence extends \MapasCulturais\Entity 
 {
-    #[ORM\Column(name:"id" , type: "integer")]
-    #[ORM\Id]
-    #[ORM\GeneratedValue(strategy:"SEQUENCE")]
-    #[ORM\SequenceGenerator(sequenceName:"diligence_id_seq", allocationSize:1, initialValue:1)]
+    const STATUS_OPEN = 2; // Para diligencias que está em aberto
+    const STATUS_SEND = 3; // Para diligência que foi enviada para o proponente
+    const STATUS_ANSWERED = 4; // Para diligências que foi respondido pelo proponente
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="id", type="integer", nullable=false)
+     * @ORM\Id
+     * @ORM\GeneratedValue(strategy="SEQUENCE")
+     * @ORM\SequenceGenerator(sequenceName="diligence_id_seq", allocationSize=1, initialValue=1)
+     */
     protected $id;
 
     /**
@@ -32,6 +45,7 @@ class Diligence extends \MapasCulturais\Entity
     protected $registration;
 
     /**
+     * Agente que abrirá a diligência
      * @var \MapasCulturais\Entities\Agent
      *
      * @ORM\ManyToOne(targetEntity="MapasCulturais\Entities\Agent")
@@ -43,6 +57,7 @@ class Diligence extends \MapasCulturais\Entity
 
 
     /**
+     * Agente que receberá a diligência
      * @var \MapasCulturais\Entities\Agent
      *
      * @ORM\ManyToOne(targetEntity="MapasCulturais\Entities\Agent")
@@ -52,22 +67,72 @@ class Diligence extends \MapasCulturais\Entity
      */
     protected $agent;
 
-
-    #[ORM\Column(type: 'datetime', name: 'create_timestamp', nullable: false)]
+    /**
+     * @var \DateTime
+     *
+     * @ORM\Column(name="create_timestamp", type="datetime", nullable=false)
+     */
     protected $createTimestamp;
 
-    #[ORM\Column(type: 'text', name: 'description', nullable: false)]
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="description", type="text", nullable=false)
+     */
     protected $description;
 
-    #[ORM\Column( name: 'description', type:"string", length: 50, nullable: false)]
-    protected $status;
 
-    #[ORM\Column( name: 'situation', type:"string", length: 50, nullable: false)]
-    protected $situation;
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="status", type="integer", nullable=false)
+     */
+    protected $status = Entity::STATUS_DRAFT;
+   
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="situation", type="integer", nullable=false)
+     */
+    protected $situation = self::STATUS_OPEN;
 
-    #[ORM\Column(type: 'integer', name: 'days', nullable: false, options:["default" => 3])]
-    protected $days;
 
-    #[ORM\Column( name: 'enable', type:"boolean", nullable: false)]
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="days", type="integer", nullable=false)
+     */
+    protected $days = 3;
+
+    /**
+     * @var bool
+     *
+     * @ORM\Column(name="enable", type="boolean", nullable=true)
+     */
     protected $enable = false;
+
+    static public function sendQueue($userDestination)
+    {
+
+        $exchange = 'router';
+        $queue = 'msgs';
+    
+        $connection = new AMQPStreamConnection('rabbitmq', '5672', 'mqadmin', 'Admin123XX_', '/');
+        $channel = $connection->channel();
+        $channel->queue_declare($queue, false, true, false, false);
+    
+        $channel->exchange_declare($exchange, AMQPExchangeType::DIRECT, false, true, false);
+        $channel->queue_bind($queue, $exchange);
+
+       
+        $messageBody = json_encode($userDestination);
+        $message = new AMQPMessage($messageBody, array('content_type' => 'text/plain', 'delivery_mode' => AMQPMessage::DELIVERY_MODE_PERSISTENT));
+        $channel->basic_publish($message, $exchange);
+
+        $channel->close();
+        $connection->close();
+
+
+    }
 }

@@ -1,12 +1,18 @@
 <?php use MapasCulturais\i; ?>
 <script>
      $(document).ready(function () {
-        $("#meuTextarea").on("keyup", function() {
+        $("#btn-save-diligence").hide()
+        $("#label-save-content-diligence").hide()
+        if($(this).val() > 0){
+            $("#btn-save-diligence").show()
+        }
+        $("#descriptionDiligence").on("keyup", function() {
         var texto = $(this).val(); // Obtém o valor do textarea
-        console.log("Caractere digitado: " + texto.slice(-1)); // Captura o último caractere digitado
             if(texto.slice(-1) == '')
             {
-                console.log('nao tem valor')
+                $("#btn-save-diligence").hide()
+            }else{
+                $("#btn-save-diligence").show()
             }
         });
     });
@@ -35,19 +41,21 @@
             </p>
         </div>
         <div>
-            <textarea name="" id="meuTextarea" cols="30" rows="10"
+            <textarea name="description" id="descriptionDiligence" cols="30" rows="10"
                 placeholder="Escreva aqui a sua diligência"
                 class="diligence-context-open"
             ></textarea>
         </div>
         <div style="" class="div-btn-send-diligence">
-        <label class="diligence-label-save">
+        <label class="diligence-label-save" id="label-save-content-diligence">
             <i class="fas fa-check-circle mr-10"></i>
             Suas alterações foram salvas
         </label>
             <button 
                 class="btn-send-diligence mr-10"
                 title="Salva o conteúdo mas não envia para o proponente"
+                id="btn-save-diligence"
+                onclick="saveDiligence()"
             >
                 Salvar
                 <i class="fas fa-save"></i>
@@ -67,6 +75,26 @@
             }
             function showRegistration() {
                 $("#registration-content-all").show();
+            }
+            function saveDiligence()
+            {
+                $.ajax({
+                    type: "POST",
+                    url: MapasCulturais.createUrl('diligence', 'save'),
+                    data: {
+                        registration: MapasCulturais.entity.id,
+                        openAgent: MapasCulturais.userProfile.id,
+                        agent: MapasCulturais.entity.ownerId,
+                        createTimestamp: moment().format("YYYY-MM-DD"),
+                        description: $("#descriptionDiligence").val(),
+                        status: 0,
+
+                    },
+                    dataType: "json",
+                    success: function (response) {
+                        console.log({response})
+                    }
+                });
             }
            
         </script>
