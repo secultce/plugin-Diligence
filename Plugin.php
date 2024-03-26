@@ -14,5 +14,8 @@ class Plugin extends \MapasCulturais\Plugin {
     });
    }
 
-   function register () {}
+   function register () {
+      $app = App::i();
+      $app->registerController('diligence', Controllers\Diligence::class);
+   }
 }
