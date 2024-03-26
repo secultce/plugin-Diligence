@@ -41,9 +41,25 @@
             ></textarea>
         </div>
         <div style="" class="div-btn-send-diligence">
-            <button class="btn-send-diligence">Enviar
-            <i class="fas fa-paper-plane"></i>
+        <label class="diligence-label-save">
+            <i class="fas fa-check-circle mr-10"></i>
+            Suas alterações foram salvas
+        </label>
+            <button 
+                class="btn-send-diligence mr-10"
+                title="Salva o conteúdo mas não envia para o proponente"
+            >
+                Salvar
+                <i class="fas fa-save"></i>
             </button>
+            <button 
+                class="btn-send-diligence"
+                title="Salva e envia para o proponente"
+            >
+                Enviar
+                <i class="fas fa-paper-plane"></i>
+            </button>
+           
         </div>
         <script>
             function hideRegistration() {

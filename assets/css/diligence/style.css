@@ -20,3 +20,17 @@
     font-weight: 600;
     cursor: pointer;
 }
+.btn-send-diligence:hover {
+    border:1px solid #085E55;
+    /* color: white; */
+    border-radius: 8px;
+  }
+.mr-10 {
+    margin-right: 10px;
+}
+.diligence-label-save {
+    display: flex;
+    flex: auto;
+    color: #53b37f;
+    font-weight: 600;
+}
