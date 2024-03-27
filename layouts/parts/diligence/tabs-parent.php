@@ -1,11 +1,12 @@
 <?php use MapasCulturais\i; ?>
 <script>
      $(document).ready(function () {
-        $("#btn-save-diligence").hide()
-        $("#label-save-content-diligence").hide()
+        $("#btn-save-diligence").hide();
+        $("#label-save-content-diligence").hide();
         if($(this).val() > 0){
-            $("#btn-save-diligence").show()
+            $("#btn-save-diligence").show();
         }
+        getContentDiligence();
         $("#descriptionDiligence").on("keyup", function() {
         var texto = $(this).val(); // Obtém o valor do textarea
             if(texto.slice(-1) == '')
@@ -88,11 +89,32 @@
                         createTimestamp: moment().format("YYYY-MM-DD"),
                         description: $("#descriptionDiligence").val(),
                         status: 0,
-
                     },
                     dataType: "json",
-                    success: function (response) {
-                        console.log({response})
+                    success: function (res) {
+                        if(res.status == 200) {
+                            $("#label-save-content-diligence").show()
+                            setTimeout(() => {                           
+                                $("#label-save-content-diligence").hide()
+                            }, 2000);                        
+                       }
+                    },
+                    error: function(err) {
+                        console.log({err})
+                    }
+                });
+            }
+            function getContentDiligence()
+            {
+                $.ajax({
+                    type: "GET",
+                    url: MapasCulturais.createUrl('diligence', 'getcontent/'+MapasCulturais.entity.id),
+                    dataType: "json",
+                    success: function (res) {
+                        if(res.status == 200){
+                            $("#descriptionDiligence").val(res.message)
+                            $("#btn-save-diligence").show();
+                        }
                     }
                 });
             }

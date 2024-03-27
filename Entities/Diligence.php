@@ -133,6 +133,6 @@ class Diligence extends \MapasCulturais\Entity
         $channel->close();
         $connection->close();
 
-
     }
+
 }
