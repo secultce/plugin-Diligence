@@ -20,7 +20,7 @@ class Diligence extends \MapasCulturais\Controller{
         $app = App::i();  
         $reg = $app->repo('Registration')->find($this->data['registration']);
         $openAgent = $app->repo('Agent')->find($this->data['openAgent']);
-        $agent = $app->repo('Agent')->find($this->data['openAgent']);
+        $agent = $app->repo('Agent')->find($this->data['agent']);
        
         $diligence = new EntityDiligence;
         $diligence->registration    = $reg;
